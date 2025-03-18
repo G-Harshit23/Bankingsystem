@@ -17,7 +17,7 @@ namespace Bankingsystem
                     Console.WriteLine("=============================");
                     Console.WriteLine("Banking System");
                     Console.WriteLine("=============================");
-                    Console.WriteLine("1. Create a New Account\r\n2. Deposit Money\r\n3. Withdraw Money\r\n4. Check Account Balance\r\n5. Exit\r\n");
+                    Console.WriteLine("1. Create a New Account\r\n2. Deposit Money\r\n3. Withdraw Money\r\n4. Check Account Balance\r\n5. Transaction details\r\n6. Exit\r\n");
                     n = Convert.ToInt32(Console.ReadLine());
 
                     switch (n)
@@ -155,8 +155,23 @@ namespace Bankingsystem
                             } while (string.IsNullOrWhiteSpace(AccountNumber) || !(AccountNumber.Any(char.IsDigit)));
                             bankingtransaction.CheckAccountBalance(AccountNumber);
                             break;
-
                         case 5:
+                            do
+                            {
+                                Console.Write("Enter AccountNumber: ");
+                                AccountNumber = Console.ReadLine();
+                                if (string.IsNullOrWhiteSpace(AccountNumber))
+                                {
+                                    Console.WriteLine("Error: AccountNumber cannot be empty or null. Please enter again.");
+                                }
+                                else if (!(AccountNumber.Any(char.IsDigit)))
+                                {
+                                    Console.WriteLine("Error: AccountNumber cannot contain characters. Please enter again.");
+                                }
+                            } while (string.IsNullOrWhiteSpace(AccountNumber) || !(AccountNumber.Any(char.IsDigit)));
+                            bankingtransaction.GetTransactions(AccountNumber);
+                            break;
+                        case 6:
                             return;
 
                         default:

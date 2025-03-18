@@ -11,7 +11,9 @@ namespace Bankingsystem.Data
 {
     public class AppDbContext : DbContext
     {
+       
         public DbSet<Accounts> Accounts { get; set; }
+        public DbSet<Transaction> Transaction { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             try
@@ -30,6 +32,14 @@ namespace Bankingsystem.Data
                 entity.Property(e => e.Balance)
                     .HasDefaultValue(0.00);
             });
+
+            modelBuilder.Entity<Transaction>()
+                .HasOne(t => t.Accounts)
+                .WithMany() 
+                .HasForeignKey(t => t.AccountId) 
+                .OnDelete(DeleteBehavior.Cascade); 
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

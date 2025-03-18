@@ -34,6 +34,13 @@ namespace Bankingsystem
             if (account != null)
             {
                 account.Deposit(Amount);
+                var transaction = new Transaction
+                {
+                    AccountId = account.AccountId,
+                    AccountNumber = AccountNumber,
+                    TransactionType = $"{DateTime.Now } | Deposited money | Rs.{Amount}"
+                };
+                _context.Transaction.Add(transaction);
                 _context.SaveChanges();
                 CheckAccountBalance(AccountNumber);
             }
@@ -51,6 +58,13 @@ namespace Bankingsystem
                 try
                 {
                     account.Withdraw(Amount);
+                    var transaction = new Transaction
+                    {
+                        AccountId=account.AccountId,
+                        AccountNumber = AccountNumber,
+                        TransactionType = $"{DateTime.Now} | Withdraw money  | Rs.{Amount} "
+                    };
+                    _context.Transaction.Add(transaction);
                     _context.SaveChanges();
                     CheckAccountBalance(AccountNumber);
                 }
@@ -71,6 +85,38 @@ namespace Bankingsystem
             if (account != null)
             {
                 Console.WriteLine($"Balance: {account.Balance:F2}");
+            }
+            else
+            {
+                Console.WriteLine("Account not found.");
+            }
+        }
+
+        public void GetTransactions(string accountNumber)
+        {
+            var account = _context.Accounts.FirstOrDefault(a => a.AccountNumber == accountNumber);
+            if (account != null)
+            {
+                var transactions = _context.Transaction
+                    .Where(t => t.AccountId == account.AccountId)
+                    .ToList();
+
+                if (transactions.Any())
+                {
+                    Console.WriteLine($"Transactions for Account Number: {accountNumber}");
+                    Console.WriteLine("---------------------------------------------------------");
+                    Console.WriteLine("Date and Time        |       Type      | Amount");
+                    Console.WriteLine("---------------------------------------------------------");
+                    foreach (var transaction in transactions)
+                    {
+                        Console.WriteLine($"{transaction.TransactionType}");
+                    }
+                    Console.WriteLine("---------------------------------------------------------");
+                }
+                else
+                {
+                    Console.WriteLine("No transactions found for this account.");
+                }
             }
             else
             {
